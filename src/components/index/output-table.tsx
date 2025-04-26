@@ -328,7 +328,7 @@ export function OutputTable(props: OutputTableProps) {
 			</table>
 			<button
 				className={
-					"w-full self-center rounded border bg-white p-4 text-black"
+					"w-full self-center rounded border bg-white p-4 text-black cursor-pointer"
 				}
 				onClick={onExportClick}
 			>
