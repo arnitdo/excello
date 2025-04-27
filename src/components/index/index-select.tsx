@@ -111,7 +111,7 @@ export function IndexSelect(props: IndexSelectProps) {
 					}
 				>
 					<h5 className={"text-lg font-semibold"}>
-						Select Input Sheet
+						Select Input Index
 					</h5>
 					<select
 						className={
