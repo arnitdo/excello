@@ -92,6 +92,7 @@ export function IndexSelect(props: IndexSelectProps) {
 								onMasterIndexSelect(targetColumn)
 							}
 						}}
+						value={masterIndex?.columnLabel}
 					>
 						{masterColumns.map((masterColumn) => (
 							<option
@@ -124,6 +125,7 @@ export function IndexSelect(props: IndexSelectProps) {
 								onInputIndexSelect(targetColumn)
 							}
 						}}
+						value={inputIndex?.columnLabel}
 					>
 						{inputColumns.map((inputColumn) => (
 							<option
