@@ -1,3 +1,5 @@
+import { useCallback } from "react"
+
 import type { Column } from "@/utils/types"
 
 type ColumnSelectProps = {
@@ -26,6 +28,37 @@ export function ColumnSelect(props: ColumnSelectProps) {
 		onMasterColumnDeselect,
 		onInputColumnDeselect,
 	} = props
+
+	const selectAllMasterColumns = useCallback(() => {
+		masterColumns.forEach((masterColumn) => {
+			onMasterColumnSelect(masterColumn)
+		})
+	}, [masterColumns, onMasterColumnSelect])
+	const deselectAllMasterColumns = useCallback(() => {
+		masterColumns.forEach((masterColumn) => {
+			onMasterColumnDeselect(masterColumn)
+		})
+	}, [masterColumns, onMasterColumnDeselect])
+	const selectAllInputColumns = useCallback(() => {
+		inputColumns.forEach((inputColumn) => {
+			if (inputIndex) {
+				if (inputColumn.columnName === inputIndex.columnName) {
+					return
+				}
+			}
+			onInputColumnSelect(inputColumn)
+		})
+	}, [inputColumns, onInputColumnSelect])
+	const deselectAllInputColumns = useCallback(() => {
+		inputColumns.forEach((inputColumn) => {
+			if (inputIndex) {
+				if (inputColumn.columnName === inputIndex.columnName) {
+					return
+				}
+			}
+			onInputColumnDeselect(inputColumn)
+		})
+	}, [inputColumns, onInputColumnDeselect])
 
 	return (
 		<div
@@ -97,6 +130,24 @@ export function ColumnSelect(props: ColumnSelectProps) {
 								</div>
 							)
 						})}
+						<div className={"flex flex-row gap-2"}>
+							<button
+								className={"border border-gray-200 p-2"}
+								onClick={() => {
+									selectAllMasterColumns()
+								}}
+							>
+								Select All
+							</button>
+							<button
+								className={"border border-gray-200 p-2"}
+								onClick={() => {
+									deselectAllMasterColumns()
+								}}
+							>
+								Deselect All
+							</button>
+						</div>
 					</div>
 				</div>
 				<div
@@ -155,6 +206,24 @@ export function ColumnSelect(props: ColumnSelectProps) {
 								</div>
 							)
 						})}
+						<div className={"flex flex-row gap-2"}>
+							<button
+								className={"border border-gray-200 p-2"}
+								onClick={() => {
+									selectAllInputColumns()
+								}}
+							>
+								Select All
+							</button>
+							<button
+								className={"border border-gray-200 p-2"}
+								onClick={() => {
+									deselectAllInputColumns()
+								}}
+							>
+								Deselect All
+							</button>
+						</div>
 					</div>
 				</div>
 			</div>

@@ -21,6 +21,9 @@ export function IndexPage() {
 	const [masterIndex, setMasterIndex] = useState<Column | null>(null)
 	const [inputIndex, setInputIndex] = useState<Column | null>(null)
 
+	const [masterHeaderOffset, setMasterHeaderOffset] = useState<number>(0)
+	const [inputHeaderOffset, setInputHeaderOffset] = useState<number>(0)
+
 	const [selectedMasterColumns, setSelectedMasterColumns] = useState<
 		Column[]
 	>([])
@@ -113,8 +116,15 @@ export function IndexPage() {
 
 		let columnCount = 0
 
-		while (masterSheet[`${utils.encode_col(columnCount)}1`] !== undefined) {
-			const colCell = masterSheet[`${utils.encode_col(columnCount)}1`]
+		while (
+			masterSheet[
+				`${utils.encode_col(columnCount)}${masterHeaderOffset + 1}`
+			] !== undefined
+		) {
+			const colCell =
+				masterSheet[
+					`${utils.encode_col(columnCount)}${masterHeaderOffset + 1}`
+				]
 			columnArr.push({
 				columnIdx: columnCount,
 				columnLabel: utils.encode_col(columnCount),
@@ -125,7 +135,7 @@ export function IndexPage() {
 		}
 
 		return columnArr
-	}, [masterSheet])
+	}, [masterSheet, masterHeaderOffset])
 
 	const inputSheetColumns = useMemo(() => {
 		if (inputSheet === null) {
@@ -136,8 +146,15 @@ export function IndexPage() {
 
 		let columnCount = 0
 
-		while (inputSheet[`${utils.encode_col(columnCount)}1`] !== undefined) {
-			const colCell = inputSheet[`${utils.encode_col(columnCount)}1`]
+		while (
+			inputSheet[
+				`${utils.encode_col(columnCount)}${inputHeaderOffset + 1}`
+			] !== undefined
+		) {
+			const colCell =
+				inputSheet[
+					`${utils.encode_col(columnCount)}${inputHeaderOffset + 1}`
+				]
 			columnArr.push({
 				columnIdx: columnCount,
 				columnLabel: utils.encode_col(columnCount),
@@ -147,21 +164,21 @@ export function IndexPage() {
 		}
 
 		return columnArr
-	}, [inputSheet])
+	}, [inputSheet, inputHeaderOffset])
 
-	const masterSheetJSON = useMemo(() => {
-		if (masterSheet) {
-			return utils.sheet_to_json<Record<string, any>>(masterSheet)
-		}
-		return []
-	}, [masterSheet])
+	// const masterSheetJSON = useMemo(() => {
+	// 	if (masterSheet) {
+	// 		return utils.sheet_to_json<Record<string, any>>(masterSheet)
+	// 	}
+	// 	return []
+	// }, [masterSheet])
 
-	const inputSheetJSON = useMemo(() => {
-		if (inputSheet) {
-			return utils.sheet_to_json<Record<string, any>>(inputSheet)
-		}
-		return []
-	}, [inputSheet])
+	// const inputSheetJSON = useMemo(() => {
+	// 	if (inputSheet) {
+	// 		return utils.sheet_to_json<Record<string, any>>(inputSheet)
+	// 	}
+	// 	return []
+	// }, [inputSheet])
 
 	// We don't need to select the master index since the input index is the same
 	// useEffect(() => {
@@ -251,6 +268,10 @@ export function IndexPage() {
 						onMasterSheetSelect={setMasterSheetName}
 						inputSheetOptions={inputSheetNames}
 						onInputSheetSelect={setInputSheetName}
+						masterHeaderOffset={masterHeaderOffset}
+						setMasterHeaderOffset={setMasterHeaderOffset}
+						inputHeaderOffset={inputHeaderOffset}
+						setInputHeaderOffset={setInputHeaderOffset}
 					/>
 				</>
 			) : null}
@@ -294,6 +315,8 @@ export function IndexPage() {
 						inputIndex={inputIndex}
 						masterSelectedColumns={selectedMasterColumns}
 						inputSelectedColumns={selectedInputColumns}
+						masterHeaderOffset={masterHeaderOffset}
+						inputHeaderOffset={inputHeaderOffset}
 					/>
 				</>
 			) : null}

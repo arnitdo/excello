@@ -10,6 +10,8 @@ type OutputTableProps = {
 	inputIndex: Column | null
 	masterSelectedColumns: Column[]
 	inputSelectedColumns: Column[]
+	masterHeaderOffset: number
+	inputHeaderOffset: number
 }
 
 type MatchResult = [
@@ -30,32 +32,34 @@ export function OutputTable(props: OutputTableProps) {
 		masterSheet,
 		inputIndex,
 		masterIndex,
+		masterHeaderOffset,
+		inputHeaderOffset,
 	} = props
 
 	const inputRowCount = useMemo(() => {
 		if (inputSheet === null || inputIndex === null) {
 			return 0
 		}
-		let rowCount = 1
+		let rowCount = inputHeaderOffset + 1
 		while (
 			inputSheet[`${inputIndex.columnLabel}${rowCount}`] !== undefined
 		) {
 			rowCount++
 		}
-		return rowCount - (1 + ROW_COUNT_OFFSET)
+		return rowCount - (1 + ROW_COUNT_OFFSET + inputHeaderOffset)
 	}, [inputSelectedColumns, inputSheet])
 
 	const masterRowCount = useMemo(() => {
 		if (masterSheet === null || masterIndex === null) {
 			return 0
 		}
-		let rowCount = 1
+		let rowCount = masterHeaderOffset + 1
 		while (
 			masterSheet[`${masterIndex.columnLabel}${rowCount}`] !== undefined
 		) {
 			rowCount++
 		}
-		return rowCount - (1 + ROW_COUNT_OFFSET)
+		return rowCount - (1 + ROW_COUNT_OFFSET + masterHeaderOffset)
 	}, [masterSelectedColumns, masterSheet, masterIndex])
 
 	const masterIndexMap = useMemo(() => {
@@ -72,7 +76,7 @@ export function OutputTable(props: OutputTableProps) {
 		}
 
 		for (
-			let rowIndex = 2;
+			let rowIndex = masterHeaderOffset + 2;
 			rowIndex <= masterRowCount + ROW_COUNT_OFFSET;
 			rowIndex++
 		) {
@@ -115,7 +119,7 @@ export function OutputTable(props: OutputTableProps) {
 		}
 
 		for (
-			let rowIndex = 2;
+			let rowIndex = inputHeaderOffset + 2;
 			rowIndex <= inputRowCount + ROW_COUNT_OFFSET;
 			rowIndex++
 		) {
@@ -125,6 +129,9 @@ export function OutputTable(props: OutputTableProps) {
 			for (let inputSelectedColumn of inputSelectedColumns) {
 				const inputSelectedCell =
 					inputSheet[`${inputSelectedColumn.columnLabel}${rowIndex}`]
+				if (!inputSelectedCell) {
+					continue
+				}
 				const inputSelectedValue = new String(
 					inputSelectedCell.w || inputSelectedCell.v,
 				).toString()
@@ -214,7 +221,43 @@ export function OutputTable(props: OutputTableProps) {
 			inputSelectedColumns,
 		])
 
-	const onExportClick = useCallback(() => {
+	const onExportMatchedClick = useCallback(() => {
+		const exportWorkbook = utils.book_new()
+		const outputMatchedSheet = utils.aoa_to_sheet([
+			outputColumns,
+			...outputMatchedRows,
+		])
+
+		utils.book_append_sheet(
+			exportWorkbook,
+			outputMatchedSheet,
+			MATCHING_ROWS_SHEET_NAME,
+		)
+
+		const excelFileName = `Excello-${new Date().toISOString()}.xlsx`
+
+		writeFile(exportWorkbook, excelFileName)
+	}, [outputColumns, outputMatchedRows])
+
+	const onExportMissingClick = useCallback(() => {
+		const exportWorkbook = utils.book_new()
+		const outputMissingSheet = utils.aoa_to_sheet([
+			outputColumns,
+			...outputMissingRows,
+		])
+
+		utils.book_append_sheet(
+			exportWorkbook,
+			outputMissingSheet,
+			MASTER_MISSING_ROWS_SHEET_NAME,
+		)
+
+		const excelFileName = `Excello-${new Date().toISOString()}.xlsx`
+
+		writeFile(exportWorkbook, excelFileName)
+	}, [outputColumns, outputMissingRows])
+
+	const onExportBothClick = useCallback(() => {
 		const exportWorkbook = utils.book_new()
 		const outputMatchedSheet = utils.aoa_to_sheet([
 			outputColumns,
@@ -256,36 +299,40 @@ export function OutputTable(props: OutputTableProps) {
 				followed by master record columns
 			</p>
 			<table>
-				<tr>
-					{outputColumns.map((columnName, colIdx) => {
+				<tbody>
+					<tr>
+						{outputColumns.map((columnName, colIdx) => {
+							return (
+								<th
+									key={colIdx}
+									className={
+										"border border-gray-200 p-2 text-left"
+									}
+								>
+									{columnName}
+								</th>
+							)
+						})}
+					</tr>
+					{outputMatchedRows.map((rowData, rowIdx) => {
 						return (
-							<th
-								key={colIdx}
-								className={
-									"border border-gray-200 p-2 text-left"
-								}
-							>
-								{columnName}
-							</th>
+							<tr key={rowIdx}>
+								{rowData.map((cellData, cellIdx) => {
+									return (
+										<td
+											key={`${rowIdx}${cellIdx}`}
+											className={
+												"border border-gray-200 p-2"
+											}
+										>
+											{cellData}
+										</td>
+									)
+								})}
+							</tr>
 						)
 					})}
-				</tr>
-				{outputMatchedRows.map((rowData, rowIdx) => {
-					return (
-						<tr key={rowIdx}>
-							{rowData.map((cellData, cellIdx) => {
-								return (
-									<td
-										key={`${rowIdx}${cellIdx}`}
-										className={"border border-gray-200 p-2"}
-									>
-										{cellData}
-									</td>
-								)
-							})}
-						</tr>
-					)
-				})}
+				</tbody>
 			</table>
 			<h2 className={"text-2xl font-bold"}>
 				5b. {outputMissingRows.length} Input Rows Missing in Master
@@ -295,46 +342,71 @@ export function OutputTable(props: OutputTableProps) {
 				the master index ({masterIndex?.columnName})
 			</p>
 			<table>
-				<tr>
-					{outputColumns.map((columnName, colIdx) => {
+				<tbody>
+					<tr>
+						{outputColumns.map((columnName, colIdx) => {
+							return (
+								<th
+									key={colIdx}
+									className={
+										"border border-gray-200 p-2 text-left"
+									}
+								>
+									{columnName}
+								</th>
+							)
+						})}
+					</tr>
+					{outputMissingRows.map((rowData, rowIdx) => {
 						return (
-							<th
-								key={colIdx}
-								className={
-									"border border-gray-200 p-2 text-left"
-								}
-							>
-								{columnName}
-							</th>
+							<tr key={rowIdx}>
+								{rowData.map((cellData, cellIdx) => {
+									return (
+										<td
+											key={`${rowIdx}${cellIdx}`}
+											className={
+												"border border-gray-200 p-2"
+											}
+										>
+											{cellData}
+										</td>
+									)
+								})}
+							</tr>
 						)
 					})}
-				</tr>
-				{outputMissingRows.map((rowData, rowIdx) => {
-					return (
-						<tr key={rowIdx}>
-							{rowData.map((cellData, cellIdx) => {
-								return (
-									<td
-										key={`${rowIdx}${cellIdx}`}
-										className={"border border-gray-200 p-2"}
-									>
-										{cellData}
-									</td>
-								)
-							})}
-						</tr>
-					)
-				})}
+				</tbody>
 			</table>
-			<button
+			<div
 				className={
-					"w-full self-center rounded border bg-white p-4 text-black cursor-pointer"
+					"flex w-full flex-row items-center justify-between gap-4"
 				}
-				onClick={onExportClick}
 			>
-				Export Data to Excel Sheet ({MATCHING_ROWS_SHEET_NAME} /{" "}
-				{MASTER_MISSING_ROWS_SHEET_NAME})
-			</button>
+				<button
+					className={
+						"w-full cursor-pointer self-center rounded border bg-white p-4 text-black"
+					}
+					onClick={onExportMatchedClick}
+				>
+					Export Matched
+				</button>
+				<button
+					className={
+						"w-full cursor-pointer self-center rounded border bg-white p-4 text-black"
+					}
+					onClick={onExportMissingClick}
+				>
+					Export Missing
+				</button>
+				<button
+					className={
+						"w-full cursor-pointer self-center rounded border bg-white p-4 text-black"
+					}
+					onClick={onExportBothClick}
+				>
+					Export Both
+				</button>
+			</div>
 		</div>
 	)
 }

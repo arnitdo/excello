@@ -1,8 +1,14 @@
+import type { Dispatch, SetStateAction } from "react"
+
 type SheetSelectProps = {
 	masterSheetOptions: string[]
 	onMasterSheetSelect: (masterSheetName: string) => void
 	inputSheetOptions: string[]
 	onInputSheetSelect: (inputSheetName: string) => void
+	masterHeaderOffset: number
+	setMasterHeaderOffset: Dispatch<SetStateAction<number>>
+	inputHeaderOffset: number
+	setInputHeaderOffset: Dispatch<SetStateAction<number>>
 }
 
 export function SheetSelect(props: SheetSelectProps) {
@@ -11,6 +17,10 @@ export function SheetSelect(props: SheetSelectProps) {
 		masterSheetOptions,
 		onInputSheetSelect,
 		onMasterSheetSelect,
+		masterHeaderOffset,
+		setMasterHeaderOffset,
+		inputHeaderOffset,
+		setInputHeaderOffset,
 	} = props
 
 	return (
@@ -49,6 +59,19 @@ export function SheetSelect(props: SheetSelectProps) {
 							</option>
 						))}
 					</select>
+					Header Offset{" "}
+					<input
+						className={"border border-gray-200"}
+						type={"number"}
+						min={0}
+						value={masterHeaderOffset}
+						onChange={(e) => {
+							setMasterHeaderOffset(
+								Number.parseInt(e.target.value || "0"),
+							)
+						}}
+					></input>{" "}
+					Rows
 				</div>
 				<div
 					className={
@@ -72,6 +95,18 @@ export function SheetSelect(props: SheetSelectProps) {
 							</option>
 						))}
 					</select>
+					Header Offset{" "}
+					<input
+						className={"border border-gray-200"}
+						type={"number"}
+						min={0}
+						value={inputHeaderOffset}
+						onChange={(e) => {
+							setInputHeaderOffset(
+								Number.parseInt(e.target.value || "0"),
+							)
+						}}
+					></input>{" "}
 				</div>
 			</div>
 		</div>
