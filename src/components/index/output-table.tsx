@@ -12,6 +12,10 @@ type OutputTableProps = {
 	inputSelectedColumns: Column[]
 	masterHeaderOffset: number
 	inputHeaderOffset: number
+	setMissingAsNewMaster: (missingSheet: WorkSheet) => void
+	setMissingAsNewInput: (missingSheet: WorkSheet) => void
+	setMatchedAsNewMaster: (matchedSheet: WorkSheet) => void
+	setMatchedAsNewInput: (matchedSheet: WorkSheet) => void
 }
 
 type MatchResult = [
@@ -34,6 +38,10 @@ export function OutputTable(props: OutputTableProps) {
 		masterIndex,
 		masterHeaderOffset,
 		inputHeaderOffset,
+		setMatchedAsNewInput,
+		setMatchedAsNewMaster,
+		setMissingAsNewInput,
+		setMissingAsNewMaster
 	} = props
 
 	const inputRowCount = useMemo(() => {
@@ -286,6 +294,38 @@ export function OutputTable(props: OutputTableProps) {
 		writeFile(exportWorkbook, excelFileName)
 	}, [outputColumns, outputMatchedRows, outputMissingRows])
 
+	const onSetMissingAsNewMasterClick = useCallback(() => {
+		const missingSheet = utils.aoa_to_sheet([
+			outputColumns,
+			...outputMissingRows,
+		])
+		setMissingAsNewMaster(missingSheet)
+	}, [outputColumns, outputMissingRows, setMissingAsNewMaster])
+
+	const onSetMissingAsNewInputClick = useCallback(() => {
+		const missingSheet = utils.aoa_to_sheet([
+			outputColumns,
+			...outputMissingRows,
+		])
+		setMissingAsNewInput(missingSheet)
+	}, [outputColumns, outputMissingRows, setMissingAsNewInput])
+
+	const onSetMatchedAsNewMasterClick = useCallback(() => {
+		const matchedSheet = utils.aoa_to_sheet([
+			outputColumns,
+			...outputMatchedRows,
+		])
+		setMatchedAsNewMaster(matchedSheet)
+	}, [outputColumns, outputMatchedRows, setMatchedAsNewMaster])
+
+	const onSetMatchedAsNewInputClick = useCallback(() => {
+		const matchedSheet = utils.aoa_to_sheet([
+			outputColumns,
+			...outputMatchedRows,
+		])
+		setMatchedAsNewInput(matchedSheet)
+	}, [outputColumns, outputMatchedRows, setMatchedAsNewInput])
+
 	return (
 		<div
 			className={"flex w-full flex-col items-start justify-between gap-4"}
@@ -405,6 +445,44 @@ export function OutputTable(props: OutputTableProps) {
 					onClick={onExportBothClick}
 				>
 					Export Both
+				</button>
+			</div>
+			<div
+				className={
+					"flex w-full flex-row items-center justify-between gap-4"
+				}
+			>
+				<button
+					className={
+						"w-full cursor-pointer self-center rounded border bg-white p-4 text-black"
+					}
+					onClick={onSetMissingAsNewMasterClick}
+				>
+					Set Missing as New Master
+				</button>
+				<button
+					className={
+						"w-full cursor-pointer self-center rounded border bg-white p-4 text-black"
+					}
+					onClick={onSetMissingAsNewInputClick}
+				>
+					Set Missing as New Input
+				</button>
+				<button
+					className={
+						"w-full cursor-pointer self-center rounded border bg-white p-4 text-black"
+					}
+					onClick={onSetMatchedAsNewMasterClick}
+				>
+					Set Matched as New Master
+				</button>
+				<button
+					className={
+						"w-full cursor-pointer self-center rounded border bg-white p-4 text-black"
+					}
+					onClick={onSetMatchedAsNewInputClick}
+				>
+					Set Matched as New Input
 				</button>
 			</div>
 		</div>

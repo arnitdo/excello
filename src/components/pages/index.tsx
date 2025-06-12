@@ -4,7 +4,7 @@ import { IndexSelect } from "@/components/index/index-select"
 import { OutputTable } from "@/components/index/output-table"
 import { SheetSelect } from "@/components/index/sheet-select"
 import { useEffect, useMemo, useState } from "react"
-import { WorkBook, read, utils } from "xlsx"
+import { WorkBook, read, utils, type WorkSheet } from "xlsx"
 
 import type { Column } from "@/utils/types"
 
@@ -166,33 +166,6 @@ export function IndexPage() {
 		return columnArr
 	}, [inputSheet, inputHeaderOffset])
 
-	// const masterSheetJSON = useMemo(() => {
-	// 	if (masterSheet) {
-	// 		return utils.sheet_to_json<Record<string, any>>(masterSheet)
-	// 	}
-	// 	return []
-	// }, [masterSheet])
-
-	// const inputSheetJSON = useMemo(() => {
-	// 	if (inputSheet) {
-	// 		return utils.sheet_to_json<Record<string, any>>(inputSheet)
-	// 	}
-	// 	return []
-	// }, [inputSheet])
-
-	// We don't need to select the master index since the input index is the same
-	// useEffect(() => {
-	// 	if (masterIndex) {
-	// 		onMasterColumnSelect(masterIndex)
-	// 	}
-	// }, [masterIndex])
-
-	// useEffect(() => {
-	// 	if (inputIndex) {
-	// 		onInputColumnSelect(inputIndex)
-	// 	}
-	// }, [inputIndex])
-
 	/* Display logic */
 	const showSheetSelect = !!(masterRecord && inputRecord)
 	const showIndexSelect = !!(masterSheet && inputSheet)
@@ -249,6 +222,27 @@ export function IndexPage() {
 			}),
 		)
 	}
+
+	const setMatchedAsNewInput = (newWorkSheet: WorkSheet) => {
+		const virtualWorkbook = utils.book_new()
+		utils.book_append_sheet(virtualWorkbook, newWorkSheet, "Previously Matched")	
+		setInputWorkbook(virtualWorkbook)
+	} 
+	const setMatchedAsNewMaster = (newWorkSheet: WorkSheet) => {
+		const virtualWorkbook = utils.book_new()
+		utils.book_append_sheet(virtualWorkbook, newWorkSheet, "Previously Matched")	
+		setMasterWorkbook(virtualWorkbook)
+	} 
+	const setMissingAsNewInput = (newWorkSheet: WorkSheet) => {
+		const virtualWorkbook = utils.book_new()
+		utils.book_append_sheet(virtualWorkbook, newWorkSheet, "Previously Missing")	
+		setInputWorkbook(virtualWorkbook)
+	} 
+	const setMissingAsNewMaster = (newWorkSheet: WorkSheet) => {
+		const virtualWorkbook = utils.book_new()
+		utils.book_append_sheet(virtualWorkbook, newWorkSheet, "Previously Missing")	
+		setMasterWorkbook(virtualWorkbook)
+	} 
 
 	return (
 		<div
@@ -317,6 +311,10 @@ export function IndexPage() {
 						inputSelectedColumns={selectedInputColumns}
 						masterHeaderOffset={masterHeaderOffset}
 						inputHeaderOffset={inputHeaderOffset}
+						setMatchedAsNewInput={setMatchedAsNewInput}
+						setMatchedAsNewMaster={setMatchedAsNewMaster}
+						setMissingAsNewInput={setMissingAsNewInput}
+						setMissingAsNewMaster={setMissingAsNewMaster}
 					/>
 				</>
 			) : null}
