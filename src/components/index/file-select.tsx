@@ -23,7 +23,7 @@ export function FileSelect({
 			>
 				<div
 					className={
-						"flex min-h-16 flex-grow flex-row items-center justify-between rounded border border-gray-200 p-2"
+						"flex min-h-16 flex-grow flex-row items-center justify-between rounded border border-black p-2"
 					}
 				>
 					<h5 className={"text-lg font-semibold"}>
@@ -33,7 +33,7 @@ export function FileSelect({
 						type={"file"}
 						accept={".ods,.csv,.xlsx"}
 						className={
-							"max-w-[32ch] rounded border border-gray-200 p-1"
+							"max-w-[32ch] rounded border border-black p-1"
 						}
 						onChange={(e) => {
 							const fileList = e.target.files
@@ -47,7 +47,7 @@ export function FileSelect({
 				</div>
 				<div
 					className={
-						"flex min-h-16 flex-grow flex-row items-center justify-between rounded border border-gray-200 p-2"
+						"flex min-h-16 flex-grow flex-row items-center justify-between rounded border border-black p-2"
 					}
 				>
 					<h5 className={"text-lg font-semibold"}>
@@ -57,7 +57,7 @@ export function FileSelect({
 						type={"file"}
 						accept={".ods,.csv,.xlsx"}
 						className={
-							"max-w-[32ch] rounded border border-gray-200 p-1"
+							"max-w-[32ch] rounded border border-black p-1"
 						}
 						onChange={(e) => {
 							const fileList = e.target.files

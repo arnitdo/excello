@@ -72,7 +72,7 @@ export function IndexSelect(props: IndexSelectProps) {
 			>
 				<div
 					className={
-						"flex min-h-16 flex-grow flex-row items-center justify-between rounded border border-gray-200 p-2"
+						"flex min-h-16 flex-grow flex-row items-center justify-between rounded border border-black p-2"
 					}
 				>
 					<h5 className={"text-lg font-semibold"}>
@@ -80,7 +80,7 @@ export function IndexSelect(props: IndexSelectProps) {
 					</h5>
 					<select
 						className={
-							"max-w-[32ch] rounded border border-gray-200 p-1"
+							"max-w-[32ch] rounded border border-black p-1"
 						}
 						onChange={(e) => {
 							const targetColumn = masterColumns.find(
@@ -107,7 +107,7 @@ export function IndexSelect(props: IndexSelectProps) {
 				</div>
 				<div
 					className={
-						"flex min-h-16 flex-grow flex-row items-center justify-between rounded border border-gray-200 p-2"
+						"flex min-h-16 flex-grow flex-row items-center justify-between rounded border border-black p-2"
 					}
 				>
 					<h5 className={"text-lg font-semibold"}>
@@ -115,7 +115,7 @@ export function IndexSelect(props: IndexSelectProps) {
 					</h5>
 					<select
 						className={
-							"max-w-[32ch] rounded border border-gray-200 p-1"
+							"max-w-[32ch] rounded border border-black p-1"
 						}
 						onChange={(e) => {
 							const targetColumn = inputColumns.find((colObj) => {

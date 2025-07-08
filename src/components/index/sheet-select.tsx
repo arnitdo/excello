@@ -39,7 +39,7 @@ export function SheetSelect(props: SheetSelectProps) {
 			>
 				<div
 					className={
-						"flex min-h-16 flex-grow flex-row items-center justify-between rounded border border-gray-200 p-2"
+						"flex min-h-16 flex-grow flex-row items-center justify-between rounded border border-black p-2"
 					}
 				>
 					<h5 className={"text-lg font-semibold"}>
@@ -47,7 +47,7 @@ export function SheetSelect(props: SheetSelectProps) {
 					</h5>
 					<select
 						className={
-							"max-w-[32ch] rounded border border-gray-200 p-1"
+							"max-w-[32ch] rounded border border-black p-1"
 						}
 						onChange={(e) => {
 							onMasterSheetSelect(e.target.value)
@@ -61,7 +61,7 @@ export function SheetSelect(props: SheetSelectProps) {
 					</select>
 					Header Offset{" "}
 					<input
-						className={"border border-gray-200"}
+						className={"border border-black"}
 						type={"number"}
 						min={0}
 						value={masterHeaderOffset}
@@ -75,7 +75,7 @@ export function SheetSelect(props: SheetSelectProps) {
 				</div>
 				<div
 					className={
-						"flex min-h-16 flex-grow flex-row items-center justify-between rounded border border-gray-200 p-2"
+						"flex min-h-16 flex-grow flex-row items-center justify-between rounded border border-black p-2"
 					}
 				>
 					<h5 className={"text-lg font-semibold"}>
@@ -83,7 +83,7 @@ export function SheetSelect(props: SheetSelectProps) {
 					</h5>
 					<select
 						className={
-							"max-w-[32ch] rounded border border-gray-200 p-1"
+							"max-w-[32ch] rounded border border-black p-1"
 						}
 						onChange={(e) => {
 							onInputSheetSelect(e.target.value)
@@ -97,7 +97,7 @@ export function SheetSelect(props: SheetSelectProps) {
 					</select>
 					Header Offset{" "}
 					<input
-						className={"border border-gray-200"}
+						className={"border border-black"}
 						type={"number"}
 						min={0}
 						value={inputHeaderOffset}

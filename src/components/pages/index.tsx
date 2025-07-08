@@ -227,21 +227,25 @@ export function IndexPage() {
 		const virtualWorkbook = utils.book_new()
 		utils.book_append_sheet(virtualWorkbook, newWorkSheet, "Previously Matched")	
 		setInputWorkbook(virtualWorkbook)
+		setSelectedInputColumns([])
 	} 
 	const setMatchedAsNewMaster = (newWorkSheet: WorkSheet) => {
 		const virtualWorkbook = utils.book_new()
 		utils.book_append_sheet(virtualWorkbook, newWorkSheet, "Previously Matched")	
 		setMasterWorkbook(virtualWorkbook)
+		setSelectedMasterColumns([])
 	} 
 	const setMissingAsNewInput = (newWorkSheet: WorkSheet) => {
 		const virtualWorkbook = utils.book_new()
 		utils.book_append_sheet(virtualWorkbook, newWorkSheet, "Previously Missing")	
 		setInputWorkbook(virtualWorkbook)
+		setSelectedInputColumns([])
 	} 
 	const setMissingAsNewMaster = (newWorkSheet: WorkSheet) => {
 		const virtualWorkbook = utils.book_new()
 		utils.book_append_sheet(virtualWorkbook, newWorkSheet, "Previously Missing")	
 		setMasterWorkbook(virtualWorkbook)
+		setSelectedInputColumns([])
 	} 
 
 	return (
@@ -256,7 +260,7 @@ export function IndexPage() {
 			/>
 			{showSheetSelect ? (
 				<>
-					<hr className={"w-full border-gray-200"} />
+					<hr className={"w-full border-black"} />
 					<SheetSelect
 						masterSheetOptions={masterSheetNames}
 						onMasterSheetSelect={setMasterSheetName}
@@ -271,7 +275,7 @@ export function IndexPage() {
 			) : null}
 			{showIndexSelect ? (
 				<>
-					<hr className={"w-full border-gray-200"} />
+					<hr className={"w-full border-black"} />
 					<IndexSelect
 						masterColumns={masterSheetColumns}
 						inputColumns={inputSheetColumns}
@@ -284,7 +288,7 @@ export function IndexPage() {
 			) : null}
 			{showColumnSelect ? (
 				<>
-					<hr className={"w-full border-gray-200"} />
+					<hr className={"w-full border-black"} />
 					<ColumnSelect
 						masterColumns={masterSheetColumns}
 						inputColumns={inputSheetColumns}
@@ -301,7 +305,7 @@ export function IndexPage() {
 			) : null}
 			{showOutput ? (
 				<>
-					<hr className={"w-full border-gray-200"} />
+					<hr className={"w-full border-black"} />
 					<OutputTable
 						masterSheet={masterSheet}
 						inputSheet={inputSheet}

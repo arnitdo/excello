@@ -75,7 +75,7 @@ export function ColumnSelect(props: ColumnSelectProps) {
 			>
 				<div
 					className={
-						"flex flex-grow flex-col items-start justify-between gap-4 rounded border border-gray-200 p-2"
+						"flex flex-grow flex-col items-start justify-between gap-4 rounded border border-black p-2"
 					}
 				>
 					<h5 className={"text-lg font-semibold"}>
@@ -132,7 +132,7 @@ export function ColumnSelect(props: ColumnSelectProps) {
 						})}
 						<div className={"flex flex-row gap-2"}>
 							<button
-								className={"border border-gray-200 p-2"}
+								className={"border border-black p-2"}
 								onClick={() => {
 									selectAllMasterColumns()
 								}}
@@ -140,7 +140,7 @@ export function ColumnSelect(props: ColumnSelectProps) {
 								Select All
 							</button>
 							<button
-								className={"border border-gray-200 p-2"}
+								className={"border border-black p-2"}
 								onClick={() => {
 									deselectAllMasterColumns()
 								}}
@@ -152,7 +152,7 @@ export function ColumnSelect(props: ColumnSelectProps) {
 				</div>
 				<div
 					className={
-						"flex flex-grow flex-col items-start justify-between gap-4 rounded border border-gray-200 p-2"
+						"flex flex-grow flex-col items-start justify-between gap-4 rounded border border-black p-2"
 					}
 				>
 					<h5 className={"text-lg font-semibold"}>
@@ -208,7 +208,7 @@ export function ColumnSelect(props: ColumnSelectProps) {
 						})}
 						<div className={"flex flex-row gap-2"}>
 							<button
-								className={"border border-gray-200 p-2"}
+								className={"border border-black p-2"}
 								onClick={() => {
 									selectAllInputColumns()
 								}}
@@ -216,7 +216,7 @@ export function ColumnSelect(props: ColumnSelectProps) {
 								Select All
 							</button>
 							<button
-								className={"border border-gray-200 p-2"}
+								className={"border border-black p-2"}
 								onClick={() => {
 									deselectAllInputColumns()
 								}}

@@ -346,7 +346,7 @@ export function OutputTable(props: OutputTableProps) {
 								<th
 									key={colIdx}
 									className={
-										"border border-gray-200 p-2 text-left"
+										"border border-black p-2 text-left"
 									}
 								>
 									{columnName}
@@ -362,7 +362,7 @@ export function OutputTable(props: OutputTableProps) {
 										<td
 											key={`${rowIdx}${cellIdx}`}
 											className={
-												"border border-gray-200 p-2"
+												"border border-black p-2"
 											}
 										>
 											{cellData}
@@ -389,7 +389,7 @@ export function OutputTable(props: OutputTableProps) {
 								<th
 									key={colIdx}
 									className={
-										"border border-gray-200 p-2 text-left"
+										"border border-black p-2 text-left"
 									}
 								>
 									{columnName}
@@ -405,7 +405,7 @@ export function OutputTable(props: OutputTableProps) {
 										<td
 											key={`${rowIdx}${cellIdx}`}
 											className={
-												"border border-gray-200 p-2"
+												"border border-black p-2"
 											}
 										>
 											{cellData}
