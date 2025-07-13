@@ -2,6 +2,7 @@ import { useCallback, useMemo } from "react"
 import { type WorkSheet, utils, writeFile } from "xlsx"
 
 import type { Column } from "@/utils/types"
+import { NOTFOUND } from "@/utils"
 
 type OutputTableProps = {
 	masterSheet: WorkSheet | null
@@ -90,7 +91,7 @@ export function OutputTable(props: OutputTableProps) {
 		) {
 			const masterCell =
 				masterSheet[`${masterIndex.columnLabel}${rowIndex}`]
-			const masterIndexValue = new String(masterCell.v).toString()
+			const masterIndexValue = new String(masterCell?.v || NOTFOUND).toString()
 			const masterRowData: Record<string, string> = {}
 			for (let masterSelectedColumn of masterSelectedColumns) {
 				const masterSelectedCell =
@@ -98,7 +99,7 @@ export function OutputTable(props: OutputTableProps) {
 						`${masterSelectedColumn.columnLabel}${rowIndex}`
 					]
 				const masterSelectedValue = new String(
-					masterSelectedCell.w || masterSelectedCell.v,
+					masterSelectedCell?.w || masterSelectedCell?.v || "",
 				).toString()
 
 				masterRowData[masterSelectedColumn.columnLabel] =
@@ -132,7 +133,8 @@ export function OutputTable(props: OutputTableProps) {
 			rowIndex++
 		) {
 			const inputCell = inputSheet[`${inputIndex.columnLabel}${rowIndex}`]
-			const inputIndexValue = new String(inputCell.v).toString()
+			console.log(`${inputIndex.columnLabel}${rowIndex}`, inputCell)
+			const inputIndexValue = new String(inputCell?.v || NOTFOUND).toString()
 			const inputRowData: Record<string, string> = {}
 			for (let inputSelectedColumn of inputSelectedColumns) {
 				const inputSelectedCell =
@@ -141,7 +143,7 @@ export function OutputTable(props: OutputTableProps) {
 					continue
 				}
 				const inputSelectedValue = new String(
-					inputSelectedCell.w || inputSelectedCell.v,
+					inputSelectedCell?.w || inputSelectedCell?.v || "",
 				).toString()
 				inputRowData[inputSelectedColumn.columnLabel] =
 					inputSelectedValue
