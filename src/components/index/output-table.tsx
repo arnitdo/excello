@@ -83,7 +83,7 @@ export function OutputTable(props: OutputTableProps) {
 			{
 				rowIndex: number
 				rowData: Record<string, string>
-			}
+			}[]
 		> = {}
 
 		if (masterSheet === null || masterIndex === null) {
@@ -111,9 +111,16 @@ export function OutputTable(props: OutputTableProps) {
 				masterRowData[masterSelectedColumn.columnLabel] =
 					masterSelectedValue
 			}
-			masterMap[masterIndexValue] = {
-				rowIndex: rowIndex,
-				rowData: masterRowData,
+			if (masterMap[masterIndexValue]){
+				masterMap[masterIndexValue].push({
+					rowIndex: rowIndex,
+					rowData: masterRowData,
+				})
+			} else {
+				masterMap[masterIndexValue] = [{
+					rowIndex: rowIndex,
+					rowData: masterRowData,
+				}]
 			}
 		}
 
@@ -207,25 +214,43 @@ export function OutputTable(props: OutputTableProps) {
 			) {
 				const inputIndexKey = inputIndexKeys[inputIndexIdx]
 				const inputRows = inputIndexMap[inputIndexKey]
-				const masterRowData = masterIndexMap[inputIndexKey]?.rowData
+				const masterRows = masterIndexMap[inputIndexKey] ?? []
 
 				for (const inputRow of inputRows){
-					const finalRowData = [inputIndexKey]
+					if (masterRows.length) {
+						for (const masterRow of masterRows) {
+							const finalRowData = [inputIndexKey]
 
-					for (let inputSelectedColumn of inputSelectedColumns) {
-						finalRowData.push(
-							inputRow.rowData[inputSelectedColumn.columnLabel],
-						)
-					}
+							for (let inputSelectedColumn of inputSelectedColumns) {
+								finalRowData.push(
+									inputRow.rowData[
+										inputSelectedColumn.columnLabel
+									],
+								)
+							}
 
-					if (masterRowData) {
-						for (let masterSelectedColumn of masterSelectedColumns) {
+							if (masterRows) {
+								for (let masterSelectedColumn of masterSelectedColumns) {
+									finalRowData.push(
+										masterRow.rowData[
+											masterSelectedColumn.columnLabel
+										],
+									)
+								}
+								bothRecordArr.push(finalRowData)
+							}
+						}
+					} else {
+						const finalRowData = [inputIndexKey]
+
+						for (let inputSelectedColumn of inputSelectedColumns) {
 							finalRowData.push(
-								masterRowData[masterSelectedColumn.columnLabel],
+								inputRow.rowData[
+									inputSelectedColumn.columnLabel
+								],
 							)
 						}
-						bothRecordArr.push(finalRowData)
-					} else {
+
 						for (let masterSelectedColumn of masterSelectedColumns) {
 							finalRowData.push("")
 						}
