@@ -1,8 +1,14 @@
-import { useCallback, useMemo } from "react"
-import { type WorkSheet, utils, writeFile } from "xlsx"
+import { NOTFOUND } from "@/utils";
+import { useCallback, useMemo } from "react";
+import { type WorkSheet, utils, writeFile } from "xlsx";
 
-import type { Column } from "@/utils/types"
-import { NOTFOUND } from "@/utils"
+
+
+import type { Column } from "@/utils/types";
+
+
+
+
 
 type OutputTableProps = {
 	masterSheet: WorkSheet | null
@@ -56,7 +62,7 @@ export function OutputTable(props: OutputTableProps) {
 			rowCount++
 		}
 		return rowCount - (1 + ROW_COUNT_OFFSET + inputHeaderOffset)
-	}, [inputSelectedColumns, inputSheet])
+	}, [inputHeaderOffset, inputIndex, inputSheet])
 
 	const masterRowCount = useMemo(() => {
 		if (masterSheet === null || masterIndex === null) {
@@ -69,7 +75,7 @@ export function OutputTable(props: OutputTableProps) {
 			rowCount++
 		}
 		return rowCount - (1 + ROW_COUNT_OFFSET + masterHeaderOffset)
-	}, [masterSelectedColumns, masterSheet, masterIndex])
+	}, [masterSheet, masterIndex, masterHeaderOffset])
 
 	const masterIndexMap = useMemo(() => {
 		const masterMap: Record<
@@ -112,7 +118,7 @@ export function OutputTable(props: OutputTableProps) {
 		}
 
 		return masterMap
-	}, [masterSheet, masterSelectedColumns, masterIndex])
+	}, [masterSheet, masterIndex, masterHeaderOffset, masterRowCount, masterSelectedColumns])
 
 	const inputIndexMap = useMemo(() => {
 		const inputMap: Record<
@@ -120,7 +126,7 @@ export function OutputTable(props: OutputTableProps) {
 			{
 				rowIndex: number
 				rowData: Record<string, string>
-			}
+			}[]
 		> = {}
 
 		if (inputSheet === null || inputIndex === null) {
@@ -133,7 +139,6 @@ export function OutputTable(props: OutputTableProps) {
 			rowIndex++
 		) {
 			const inputCell = inputSheet[`${inputIndex.columnLabel}${rowIndex}`]
-			console.log(`${inputIndex.columnLabel}${rowIndex}`, inputCell)
 			const inputIndexValue = new String(inputCell?.v || NOTFOUND).toString()
 			const inputRowData: Record<string, string> = {}
 			for (let inputSelectedColumn of inputSelectedColumns) {
@@ -148,14 +153,23 @@ export function OutputTable(props: OutputTableProps) {
 				inputRowData[inputSelectedColumn.columnLabel] =
 					inputSelectedValue
 			}
-			inputMap[inputIndexValue] = {
-				rowIndex: rowIndex,
-				rowData: inputRowData,
+			if (inputMap[inputIndexValue]){
+				inputMap[inputIndexValue].push({
+					rowIndex: rowIndex,
+					rowData: inputRowData,
+				})
+			} else {
+				inputMap[inputIndexValue] = [
+					{
+						rowIndex: rowIndex,
+						rowData: inputRowData,
+					}
+				]
 			}
 		}
 
 		return inputMap
-	}, [inputSheet, inputSelectedColumns, inputIndex])
+	}, [inputSheet, inputIndex, inputHeaderOffset, inputRowCount, inputSelectedColumns])
 
 	const [outputColumns, outputMatchedRows, outputMissingRows] =
 		useMemo(() => {
@@ -192,29 +206,31 @@ export function OutputTable(props: OutputTableProps) {
 				inputIndexIdx++
 			) {
 				const inputIndexKey = inputIndexKeys[inputIndexIdx]
-				const inputRowData = inputIndexMap[inputIndexKey].rowData
+				const inputRows = inputIndexMap[inputIndexKey]
 				const masterRowData = masterIndexMap[inputIndexKey]?.rowData
 
-				const finalRowData = [inputIndexKey]
+				for (const inputRow of inputRows){
+					const finalRowData = [inputIndexKey]
 
-				for (let inputSelectedColumn of inputSelectedColumns) {
-					finalRowData.push(
-						inputRowData[inputSelectedColumn.columnLabel],
-					)
-				}
-
-				if (masterRowData) {
-					for (let masterSelectedColumn of masterSelectedColumns) {
+					for (let inputSelectedColumn of inputSelectedColumns) {
 						finalRowData.push(
-							masterRowData[masterSelectedColumn.columnLabel],
+							inputRow.rowData[inputSelectedColumn.columnLabel],
 						)
 					}
-					bothRecordArr.push(finalRowData)
-				} else {
-					for (let masterSelectedColumn of masterSelectedColumns) {
-						finalRowData.push("")
+
+					if (masterRowData) {
+						for (let masterSelectedColumn of masterSelectedColumns) {
+							finalRowData.push(
+								masterRowData[masterSelectedColumn.columnLabel],
+							)
+						}
+						bothRecordArr.push(finalRowData)
+					} else {
+						for (let masterSelectedColumn of masterSelectedColumns) {
+							finalRowData.push("")
+						}
+						masterMissingArr.push(finalRowData)
 					}
-					masterMissingArr.push(finalRowData)
 				}
 			}
 
